@@ -21,25 +21,28 @@ const ContainerSelect = styled.select`
   font-size: 1.2rem;
 `;
 
-const useCoin = (label, stateInitial, options) => {
+const useCryptoCoin = (label, stateInitial, options) => {
   //State of our custom hook
-  const [state, setSate] = useState(stateInitial);
+  const [state, setSateCryptoCoin] = useState(stateInitial);
 
-  const Select = () => (
+  const SelectCrypto = () => (
     <Fragment>
       <ContainerLabel>{label}</ContainerLabel>
-      <ContainerSelect onChange={(e) => setSate(e.target.value)} value={state}>
-        <option value="">--Select your Currency--</option>
+      <ContainerSelect
+        onChange={(e) => setSateCryptoCoin(e.target.value)}
+        value={state}
+      >
+        <option value="">--Select your Crypto Coin--</option>
         {options.map((option) => (
-          <option key={option.code} value={option.code}>
-            {option.name}
+          <option key={option.CoinInfo.Id} value={option.CoinInfo.Name}>
+            {option.CoinInfo.FullName}
           </option>
         ))}
       </ContainerSelect>
     </Fragment>
   );
 
-  return [state, Select, setSate];
+  return [state, SelectCrypto, setSateCryptoCoin];
 };
 
-export default useCoin;
+export default useCryptoCoin;

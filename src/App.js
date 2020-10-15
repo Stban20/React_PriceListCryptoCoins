@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import image from "./cryptomonedas.png";
+import axios from "axios";
 import Form from "./components/Form";
+import Calc from "./components/Calc";
+import Spinner from "./components/Spinner";
 
 const ContainerMain = styled.div`
   max-width: 900px;
@@ -36,6 +39,29 @@ const ContainerHeading = styled.h1`
 `;
 
 function App() {
+  //useStates
+  const [coin, setCoin] = useState("");
+  const [cryptoCoin, setCryptoCoin] = useState("");
+  const [result, setResult] = useState({});
+  const [spinner, setSpinner] = useState(false);
+
+  useEffect(() => {
+    const calcCryptoCoin = async () => {
+      if (coin === "") return;
+      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cryptoCoin}&tsyms=${coin}`;
+      const result = await axios.get(url);
+      setSpinner(true);
+
+      setTimeout(() => {
+        setSpinner(false);
+        setResult(result.data.DISPLAY[cryptoCoin][coin]);
+      }, 2000);
+    };
+    calcCryptoCoin();
+  }, [coin, cryptoCoin]);
+
+  const component = spinner ? <Spinner /> : <Calc result={result} />;
+
   return (
     <ContainerMain>
       <div>
@@ -45,7 +71,8 @@ function App() {
         <ContainerHeading>
           Instant Price List Crypto Coins React App
         </ContainerHeading>
-        <Form />
+        <Form setCoin={setCoin} setCryptoCoin={setCryptoCoin} />
+        {component}
       </div>
     </ContainerMain>
   );
